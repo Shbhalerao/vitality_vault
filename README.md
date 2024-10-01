@@ -53,4 +53,4 @@
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/Vitalit
+   git clone https://github.com/Shbhalerao/vitality_vault.git

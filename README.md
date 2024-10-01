@@ -37,12 +37,7 @@
 
 ## 📸 Screenshots
 
-<p align="center">
-  <img src="https://via.placeholder.com/400x300.png?text=Dashboard+Screenshot" alt="Dashboard Screenshot" width="400"/>
-  <img src="https://via.placeholder.com/400x300.png?text=Client+Profile+Screenshot" alt="Client Profile Screenshot" width="400"/>
-</p>
-
----
+-- Coming soon
 
 ## 🛠️ Installation
 

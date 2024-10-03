@@ -1,6 +1,7 @@
 package com.fitnessapp.VitalityVault.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FitnessCenterDto {
 
+    @JsonProperty(required = false)
     Long id;
 
     String centerId; //Only to show in front end.

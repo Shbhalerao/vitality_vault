@@ -6,12 +6,14 @@ import com.fitnessapp.VitalityVault.services.FitnessCenterService;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Filter;
 import org.hibernate.Session;
+import org.springframework.stereotype.Service;
 
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class FitnessCenterServiceImpl implements FitnessCenterService {
 
     private FitnessCenterRepository fitnessCenterRepository;

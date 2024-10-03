@@ -1,7 +1,9 @@
 package com.fitnessapp.VitalityVault.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitnessapp.VitalityVault.TestDataUtil;
+import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
 import org.junit.jupiter.api.Test;
@@ -53,8 +55,22 @@ public class FitnessCenterControllerIntegrationTest {
     }
 
     @Test
-    public void testFitnessCenterCreationReturnsSavedCenter(){
+    public void testFitnessCenterCreationReturnsSavedCenter() throws Exception {
+        FitnessCenterEntity testAuthorA = TestDataUtil.createFitnessCenterEntity_One();
+        testAuthorA.setId(null);
+        String authorJson = objectMapper.writeValueAsString(testAuthorA);
 
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(authorJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber()
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.centerName").value("Golds Gym")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.locality").value("Teen hath naka")
+        );
     }
 
 

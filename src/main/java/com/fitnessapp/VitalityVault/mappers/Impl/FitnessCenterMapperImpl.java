@@ -4,8 +4,9 @@ import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
 import com.fitnessapp.VitalityVault.mappers.Mapper;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.stereotype.Component;
 
+@Component
 public class FitnessCenterMapperImpl implements Mapper<FitnessCenterEntity, FitnessCenterDto> {
 
     private ModelMapper modelMapper;

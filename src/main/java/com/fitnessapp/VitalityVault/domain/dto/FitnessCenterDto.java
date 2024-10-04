@@ -45,7 +45,7 @@ public class FitnessCenterDto {
 
     public void assignCenterId(Long id) {
         if (id != null) {
-            this.centerId = "fc-" + id;
+            this.centerId = "fc-" + String.format("%04d", id);
         }
     }
 

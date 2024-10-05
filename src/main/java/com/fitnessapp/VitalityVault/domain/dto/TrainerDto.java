@@ -18,7 +18,7 @@ public class TrainerDto {
 
     private Long id;
 
-    String trainerId; //Only to show in front end.
+    String trainerId;
 
     String centerId;
 

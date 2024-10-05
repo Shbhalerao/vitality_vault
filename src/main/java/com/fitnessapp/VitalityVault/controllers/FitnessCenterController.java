@@ -4,6 +4,7 @@ import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
 import com.fitnessapp.VitalityVault.mappers.Mapper;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,11 @@ import java.util.Optional;
 @RestController
 public class FitnessCenterController {
 
-    private FitnessCenterService fitnessCenterService;
+    private final FitnessCenterService fitnessCenterService;
 
-    private Mapper<FitnessCenterEntity, FitnessCenterDto> fitnessCenterMapper;
+    private final Mapper<FitnessCenterEntity, FitnessCenterDto> fitnessCenterMapper;
 
+    @Autowired
     public FitnessCenterController(FitnessCenterService fitnessCenterService
             ,Mapper<FitnessCenterEntity, FitnessCenterDto> fitnessCenterMapper){
         this.fitnessCenterService = fitnessCenterService;

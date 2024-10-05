@@ -18,7 +18,7 @@ public class FitnessCenterDto {
     @JsonProperty(required = false)
     Long id;
 
-    String centerId; //Only to show in front end.
+    String centerId;
 
     String centerName;
 

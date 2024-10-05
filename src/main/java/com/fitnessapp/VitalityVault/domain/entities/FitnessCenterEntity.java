@@ -25,6 +25,8 @@ public class FitnessCenterEntity {
     @Id
     private Long id;
 
+    private String centerId;
+
     private String centerName;
 
     private String locality;

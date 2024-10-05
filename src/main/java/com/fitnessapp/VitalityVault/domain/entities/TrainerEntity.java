@@ -29,6 +29,8 @@ public class TrainerEntity {
 
     private String trainerName;
 
+    private String trainerId;
+
     private Date workingSince;
 
     private List<Long> certifications;
@@ -52,7 +54,7 @@ public class TrainerEntity {
     private Boolean deactivated =  Boolean.FALSE;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "center_id")
     private FitnessCenterEntity fitnessCenterEntity;
 
 }

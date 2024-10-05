@@ -3,9 +3,11 @@ package com.fitnessapp.VitalityVault.services.Impl;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
 import com.fitnessapp.VitalityVault.repositories.FitnessCenterRepository;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
+import com.fitnessapp.VitalityVault.services.IdGeneratorService;
 import jakarta.persistence.EntityManager;
 import org.hibernate.Filter;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -16,18 +18,24 @@ import java.util.Optional;
 @Service
 public class FitnessCenterServiceImpl implements FitnessCenterService {
 
-    private FitnessCenterRepository fitnessCenterRepository;
+    private final FitnessCenterRepository fitnessCenterRepository;
 
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
-    public FitnessCenterServiceImpl(FitnessCenterRepository fitnessCenterRepository, EntityManager entityManager){
+    private final IdGeneratorService idGeneratorService;
+
+    @Autowired
+    public FitnessCenterServiceImpl(FitnessCenterRepository fitnessCenterRepository, EntityManager entityManager
+                    ,IdGeneratorService idGeneratorService){
         this.fitnessCenterRepository = fitnessCenterRepository;
         this.entityManager = entityManager;
+        this.idGeneratorService = idGeneratorService;
     }
 
     @Override
     public FitnessCenterEntity createFitnessCenter(FitnessCenterEntity fitnessCenterEntity) {
         fitnessCenterEntity.setCreatedDate(new Date());
+        fitnessCenterEntity.setCenterId(idGeneratorService.generateIdForFitnessCenter());
         return fitnessCenterRepository.save(fitnessCenterEntity);
     }
 

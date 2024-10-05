@@ -4,22 +4,22 @@ import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
 import com.fitnessapp.VitalityVault.mappers.Mapper;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FitnessCenterMapperImpl implements Mapper<FitnessCenterEntity, FitnessCenterDto> {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
+    @Autowired
     public FitnessCenterMapperImpl(ModelMapper modelMapper){
         this.modelMapper = modelMapper;
     }
 
     @Override
     public FitnessCenterDto mapTo(FitnessCenterEntity fitnessCenterEntity) {
-        FitnessCenterDto fitnessCenterDto = modelMapper.map(fitnessCenterEntity, FitnessCenterDto.class);
-        fitnessCenterDto.assignCenterId(fitnessCenterDto.getId());
-        return fitnessCenterDto;
+        return modelMapper.map(fitnessCenterEntity, FitnessCenterDto.class);
     }
 
     @Override

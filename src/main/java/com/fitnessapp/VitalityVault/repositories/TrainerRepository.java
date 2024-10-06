@@ -5,4 +5,8 @@ import com.fitnessapp.VitalityVault.services.TrainerService;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TrainerRepository extends JpaRepository<TrainerEntity, Long> {
+
+    boolean existsByContactNo(String contactNo);
+
+    boolean existsByEmailId(String emailId);
 }

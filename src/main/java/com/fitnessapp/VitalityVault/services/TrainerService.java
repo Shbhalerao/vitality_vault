@@ -1,6 +1,5 @@
 package com.fitnessapp.VitalityVault.services;
 
-import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
 import com.fitnessapp.VitalityVault.domain.entities.TrainerEntity;
 
 import java.util.List;
@@ -19,4 +18,8 @@ public interface TrainerService {
     TrainerEntity update(Long id,TrainerEntity trainerEntity);
 
     void deactivateTrainer(Long id);
+
+    TrainerEntity updateContactNo(Long id, String contactNo);
+
+    TrainerEntity updateEmailId(Long id, String emailId);
 }

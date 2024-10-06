@@ -88,8 +88,6 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public void deactivateTrainer(Long id) {
         trainerRepository.deleteById(id);
-
-        //If trainer is linked with clients then those clients need to be updated as well.
     }
 
     @Override
@@ -119,5 +117,4 @@ public class TrainerServiceImpl implements TrainerService {
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Trainer not found for id : "+ id));
     }
-
 }

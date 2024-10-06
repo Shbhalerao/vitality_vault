@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FitnessCenterRepository extends JpaRepository<FitnessCenterEntity, Long> {
@@ -15,4 +16,8 @@ public interface FitnessCenterRepository extends JpaRepository<FitnessCenterEnti
     List<FitnessCenterEntity> findAll();
 
     List<FitnessCenterEntity> findAllByDeactivated(Boolean deactivated);
+
+   boolean existsByContactNo(String contactNo);
+
+    boolean existsByEmailId(String emailId);
 }

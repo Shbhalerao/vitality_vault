@@ -1,6 +1,7 @@
 package com.fitnessapp.VitalityVault.services.Impl;
 
 import com.fitnessapp.VitalityVault.constants.IdConstants;
+import com.fitnessapp.VitalityVault.exceptions.IdGenerationException;
 import com.fitnessapp.VitalityVault.repositories.IdGeneratorRepository;
 import com.fitnessapp.VitalityVault.services.IdGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,21 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
 
     @Override
     public synchronized String generateIdForFitnessCenter() {
-        Long id = idGeneratorRepository.findMaxIdForFitnessCenter() + 1;
-        return IdConstants.FITNESS_CENTER_ID_PREFIX + String.format("%04d", id);
+        try{
+            Long id = idGeneratorRepository.findMaxIdForFitnessCenter() + 1;
+            return IdConstants.FITNESS_CENTER_ID_PREFIX + String.format("%04d", id);
+        }catch (Exception e){
+            throw new IdGenerationException("ID generation failed for Fitness Center : "+e.getMessage());
+        }
     }
 
     @Override
      public synchronized String generateIdForTrainer() {
-        Long id = idGeneratorRepository.findMaxIdForTrainer() + 1;
-        return IdConstants.TRAINER_ID_PREFIX + String.format("%06d", id);
+        try {
+            Long id = idGeneratorRepository.findMaxIdForTrainer() + 1;
+            return IdConstants.TRAINER_ID_PREFIX + String.format("%06d", id);
+        }catch (Exception e){
+            throw new IdGenerationException("ID generation failed for Trainer : "+e.getMessage());
+        }
     }
 }

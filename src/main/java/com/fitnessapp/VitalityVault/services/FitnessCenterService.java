@@ -18,4 +18,8 @@ public interface FitnessCenterService {
     FitnessCenterEntity update(Long id,FitnessCenterEntity fitnessCenterEntity);
 
     void deactivateFitnessCenter(Long id);
+
+    FitnessCenterEntity updateContactNo(Long id, String contactNo);
+
+    FitnessCenterEntity updateEmailId(Long id, String emailId);
 }

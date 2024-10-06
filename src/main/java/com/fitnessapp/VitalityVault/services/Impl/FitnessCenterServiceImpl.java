@@ -80,8 +80,6 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
                     Optional.ofNullable(fitnessCenterEntity.getCity()).ifPresent(existingFitnessCenter::setCity);
                     Optional.ofNullable(fitnessCenterEntity.getAddressLine1()).ifPresent(existingFitnessCenter::setAddressLine1);
                     Optional.ofNullable(fitnessCenterEntity.getAddressLine2()).ifPresent(existingFitnessCenter::setAddressLine2);
-                    Optional.ofNullable(fitnessCenterEntity.getContactNo()).ifPresent(existingFitnessCenter::setContactNo);
-                    Optional.ofNullable(fitnessCenterEntity.getEmailId()).ifPresent(existingFitnessCenter::setEmailId);
                     Optional.ofNullable(fitnessCenterEntity.getLocality()).ifPresent(existingFitnessCenter::setLocality);
                     Optional.ofNullable(fitnessCenterEntity.getPinCode()).ifPresent(existingFitnessCenter::setPinCode);
                     Optional.ofNullable(fitnessCenterEntity.getState()).ifPresent(existingFitnessCenter::setState);
@@ -93,5 +91,33 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
     @Override
     public void deactivateFitnessCenter(Long id){
         fitnessCenterRepository.deleteById(id);
+    }
+
+    @Override
+    public FitnessCenterEntity updateContactNo(Long id, String contactNo){
+        if(fitnessCenterRepository.existsByContactNo(contactNo)){
+            throw new DuplicateContactNoException("Fitness Center already exists for contact no : "+contactNo);
+        }
+
+        return fitnessCenterRepository.findById(id).map(
+                existingFitnessCenter -> {
+                    Optional.ofNullable(contactNo).ifPresent(existingFitnessCenter::setContactNo);
+                    return fitnessCenterRepository.save(existingFitnessCenter);
+                }
+        ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
+    }
+
+    @Override
+    public FitnessCenterEntity updateEmailId(Long id, String emailId){
+        if(fitnessCenterRepository.existsByContactNo(emailId)){
+            throw new DuplicateEmailIdException("Fitness Center already exists for Email Id : "+emailId);
+        }
+
+        return fitnessCenterRepository.findById(id).map(
+                existingFitnessCenter -> {
+                    Optional.ofNullable(emailId).ifPresent(existingFitnessCenter::setEmailId);
+                    return fitnessCenterRepository.save(existingFitnessCenter);
+                }
+        ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
     }
 }

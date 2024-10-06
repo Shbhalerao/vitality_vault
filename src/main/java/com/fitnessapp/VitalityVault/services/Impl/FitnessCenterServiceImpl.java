@@ -1,6 +1,9 @@
 package com.fitnessapp.VitalityVault.services.Impl;
 
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
+import com.fitnessapp.VitalityVault.exceptions.DuplicateContactNoException;
+import com.fitnessapp.VitalityVault.exceptions.DuplicateEmailIdException;
+import com.fitnessapp.VitalityVault.exceptions.ResourceNotFoundException;
 import com.fitnessapp.VitalityVault.repositories.FitnessCenterRepository;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
 import com.fitnessapp.VitalityVault.services.IdGeneratorService;
@@ -34,6 +37,12 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
 
     @Override
     public FitnessCenterEntity createFitnessCenter(FitnessCenterEntity fitnessCenterEntity) {
+        if(fitnessCenterRepository.existsByContactNo(fitnessCenterEntity.getContactNo())){
+            throw new DuplicateContactNoException("A Fitness Center already exists with contact no : "+fitnessCenterEntity.getContactNo());
+        }
+        if(fitnessCenterRepository.existsByContactNo(fitnessCenterEntity.getEmailId())){
+            throw new DuplicateEmailIdException("A Fitness Center already exists with email id : "+fitnessCenterEntity.getEmailId());
+        }
         fitnessCenterEntity.setCreatedDate(new Date());
         fitnessCenterEntity.setCenterId(idGeneratorService.generateIdForFitnessCenter());
         return fitnessCenterRepository.save(fitnessCenterEntity);
@@ -41,7 +50,7 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
 
     @Override
     public Optional<FitnessCenterEntity> getFitnessCenterForId(Long id) {
-      return  fitnessCenterRepository.findById(id);
+      return Optional.ofNullable(fitnessCenterRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : " + id)));
 
     }
 
@@ -78,7 +87,7 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
                     Optional.ofNullable(fitnessCenterEntity.getState()).ifPresent(existingFitnessCenter::setState);
                     return fitnessCenterRepository.save(existingFitnessCenter);
                 }
-        ).orElseThrow(() -> new RuntimeException("Author does not exist"));
+        ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
     }
 
     @Override

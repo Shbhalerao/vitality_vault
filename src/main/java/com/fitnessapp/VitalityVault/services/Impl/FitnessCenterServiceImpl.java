@@ -122,4 +122,32 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
     }
+
+    @Override
+    public FitnessCenterEntity updateContactNo(Long id, String contactNo){
+        if(fitnessCenterRepository.existsByContactNo(contactNo)){
+            throw new DuplicateContactNoException("Fitness Center already exists for contact no : "+contactNo);
+        }
+
+        return fitnessCenterRepository.findById(id).map(
+                existingFitnessCenter -> {
+                    Optional.ofNullable(contactNo).ifPresent(existingFitnessCenter::setContactNo);
+                    return fitnessCenterRepository.save(existingFitnessCenter);
+                }
+        ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
+    }
+
+    @Override
+    public FitnessCenterEntity updateEmailId(Long id, String emailId){
+        if(fitnessCenterRepository.existsByContactNo(emailId)){
+            throw new DuplicateEmailIdException("Fitness Center already exists for Email Id : "+emailId);
+        }
+
+        return fitnessCenterRepository.findById(id).map(
+                existingFitnessCenter -> {
+                    Optional.ofNullable(emailId).ifPresent(existingFitnessCenter::setEmailId);
+                    return fitnessCenterRepository.save(existingFitnessCenter);
+                }
+        ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
+    }
 }

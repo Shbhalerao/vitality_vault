@@ -46,7 +46,7 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
     public String generateIdForClient() {
         try {
             Long id = idGeneratorRepository.findMaxIdForClient() + 1;
-            return IdConstants.TRAINER_ID_PREFIX + String.format("%06d", id);
+            return IdConstants.CLIENT_ID_PREFIX + String.format("%06d", id);
         }catch (Exception e){
             throw new IdGenerationException("ID generation failed for Client : "+e.getMessage());
         }

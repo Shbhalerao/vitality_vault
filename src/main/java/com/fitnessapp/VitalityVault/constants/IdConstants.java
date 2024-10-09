@@ -6,4 +6,6 @@ public class IdConstants {
 
     public static final String TRAINER_ID_PREFIX = "TR-";
 
+    public static final String CLIENT_ID_PREFIX = "CL-";
+
 }

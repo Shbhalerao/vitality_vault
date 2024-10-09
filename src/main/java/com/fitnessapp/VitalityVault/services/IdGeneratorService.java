@@ -6,5 +6,5 @@ public interface IdGeneratorService {
 
     public String generateIdForTrainer();
 
-
+    public String generateIdForClient();
 }

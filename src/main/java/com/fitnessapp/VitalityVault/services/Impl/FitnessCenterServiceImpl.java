@@ -91,6 +91,8 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
     @Override
     public void deactivateFitnessCenter(Long id){
         fitnessCenterRepository.deleteById(id);
+
+        //If Center is linked with trainers or clients then those trainers and clients need to be updated as well.
     }
 
     @Override

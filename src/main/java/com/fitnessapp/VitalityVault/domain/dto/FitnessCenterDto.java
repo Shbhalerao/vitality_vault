@@ -43,10 +43,4 @@ public class FitnessCenterDto {
     Boolean deactivated;
 
 
-    public void assignCenterId(Long id) {
-        if (id != null) {
-            this.centerId = "fc-" + String.format("%04d", id);
-        }
-    }
-
 }

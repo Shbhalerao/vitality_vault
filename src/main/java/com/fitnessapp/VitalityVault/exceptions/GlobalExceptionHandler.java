@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(IdGenerationException.class)
     public ResponseEntity<String> handleIdGenerationException(IdGenerationException e){
         logger.error("ID generation failed : {}", e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

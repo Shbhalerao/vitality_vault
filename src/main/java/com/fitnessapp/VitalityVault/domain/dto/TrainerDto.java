@@ -1,10 +1,7 @@
 package com.fitnessapp.VitalityVault.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -18,9 +15,7 @@ public class TrainerDto {
 
     private Long id;
 
-    String trainerId;
-
-    String centerId;
+    private String trainerId;
 
     private String trainerName;
 
@@ -46,11 +41,7 @@ public class TrainerDto {
 
     private Boolean deactivated =  Boolean.FALSE;
 
+    private FitnessCenterDto fitnessCenterDto;
 
-    public void assignTrainerId(Long id) {
-        if (id != null) {
-            this.trainerId = "tr-" + String.format("%04d", id);
-        }
-    }
 
 }

@@ -13,4 +13,7 @@ public interface IdGeneratorRepository extends JpaRepository<Object, Long> {
     @Query("SELECT MAX(id) FROM trainer_details")
     Long findMaxIdForTrainer();
 
+    @Query("SELECT MAX(id) FROM client_details")
+    Long findMaxIdForClient();
+
 }

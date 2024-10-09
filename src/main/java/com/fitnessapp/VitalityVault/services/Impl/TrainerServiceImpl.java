@@ -12,6 +12,7 @@ import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class TrainerServiceImpl implements TrainerService {
 
     @Override
     public Optional<TrainerEntity> getTrainerForId(Long id) {
-        return Optional.ofNullable(trainerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Trainer not found for id : " + id)));
+        return Optional.empty();
     }
 
     @Override
@@ -116,5 +117,4 @@ public class TrainerServiceImpl implements TrainerService {
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Trainer not found for id : "+ id));
     }
-
 }

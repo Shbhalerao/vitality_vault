@@ -61,4 +61,6 @@ public class ClientEntity {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trainer_id")
     private TrainerEntity trainerEntity;
+
+
 }

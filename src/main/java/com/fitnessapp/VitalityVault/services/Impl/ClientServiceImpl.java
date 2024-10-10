@@ -8,12 +8,13 @@ import com.fitnessapp.VitalityVault.repositories.ClientRepository;
 import com.fitnessapp.VitalityVault.services.ClientService;
 import com.fitnessapp.VitalityVault.services.IdGeneratorService;
 import jakarta.persistence.EntityManager;
+
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Date;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
 public class ClientServiceImpl implements ClientService {
@@ -49,6 +50,7 @@ public class ClientServiceImpl implements ClientService {
         return Optional.ofNullable(clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client not found for id : " + id)));
     }
 
+
     @Override
     public List<ClientEntity> findAll(boolean isDeactivated) {
         Session session = entityManager.unwrap(Session.class);
@@ -58,6 +60,7 @@ public class ClientServiceImpl implements ClientService {
         session.disableFilter("deactivatedCenterFilter");
         return clientEntities;
     }
+
 
 
     @Override
@@ -87,6 +90,7 @@ public class ClientServiceImpl implements ClientService {
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Client not found for id : "+ id));
     }
+
 
     @Override
     public ClientEntity update(Long id, ClientEntity clientEntity) {
@@ -119,5 +123,6 @@ public class ClientServiceImpl implements ClientService {
     public boolean isExists(Long id) {
         return clientRepository.existsById(id);
     }
+
 
 }

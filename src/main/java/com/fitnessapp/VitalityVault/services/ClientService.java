@@ -22,4 +22,6 @@ public interface ClientService {
     void deactivateClient(Long id);
 
     boolean isExists(Long id);
+
+
 }

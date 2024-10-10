@@ -102,4 +102,5 @@ public class ClientController {
         return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
                 HttpStatus.OK);
     }
+
 }

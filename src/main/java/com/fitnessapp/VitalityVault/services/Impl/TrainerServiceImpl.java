@@ -53,7 +53,7 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public List<TrainerEntity> findAll(boolean isDeactivated) {
         Session session = entityManager.unwrap(Session.class);
-        Filter filter = session.enableFilter("deactivatedCenterFilter");
+        Filter filter = session.enableFilter("deactivatedTrainerFilter");
         filter.setParameter("isDeactivated", isDeactivated);
         List<TrainerEntity> trainerEntities =  trainerRepository.findAll();
         session.disableFilter("deactivatedCenterFilter");

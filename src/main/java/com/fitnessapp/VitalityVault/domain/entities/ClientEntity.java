@@ -60,5 +60,7 @@ public class ClientEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trainer_id")
-    private TrainerDto trainerDto;
+    private TrainerEntity trainerEntity;
+
+
 }

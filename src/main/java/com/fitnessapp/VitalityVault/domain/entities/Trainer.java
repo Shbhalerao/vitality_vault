@@ -19,7 +19,7 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE trainer_details SET deactivated = true WHERE id = ?")
 @FilterDef(name = "deactivateTrainerFilter", parameters = @ParamDef(name = "isDeactivated", type = Boolean.class))
 @Filter(name = "deactivateTrainerFilter", condition = "deactivated = :isDeactivated")
-public class TrainerEntity {
+public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trainer_sq")
     private Long id;
@@ -32,16 +32,6 @@ public class TrainerEntity {
 
     private List<Long> certifications;
 
-    private Long city;
-
-    private Long pinCode;
-
-    private Integer state;
-
-    private Long country;
-
-    private String address;
-
     private String contactNo;
 
     private String emailId;
@@ -52,6 +42,9 @@ public class TrainerEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "center_id")
-    private FitnessCenterEntity fitnessCenterEntity;
+    private FitnessCenter fitnessCenter;
+
+    // Identifiers for linking to the Address entity
+    private Long addressId; // Points to the Address table
 
 }

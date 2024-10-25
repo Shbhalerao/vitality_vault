@@ -1,6 +1,6 @@
 package com.fitnessapp.VitalityVault.services.Impl;
 
-import com.fitnessapp.VitalityVault.domain.entities.ClientEntity;
+import com.fitnessapp.VitalityVault.domain.entities.Client;
 import com.fitnessapp.VitalityVault.exceptions.DuplicateContactNoException;
 import com.fitnessapp.VitalityVault.exceptions.DuplicateEmailIdException;
 import com.fitnessapp.VitalityVault.exceptions.ResourceNotFoundException;
@@ -14,7 +14,6 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
 
 public class ClientServiceImpl implements ClientService {
@@ -33,30 +32,30 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientEntity createClient(ClientEntity clientEntity) {
-        if(clientRepository.existsByContactNo(clientEntity.getContactNo())){
-            throw new DuplicateContactNoException("Client already exists for contact no : "+clientEntity.getContactNo());
+    public Client createClient(Client client) {
+        if(clientRepository.existsByContactNo(client.getContactNo())){
+            throw new DuplicateContactNoException("Client already exists for contact no : "+ client.getContactNo());
         }
-        if(clientRepository.existsByEmailId(clientEntity.getEmailId())){
-            throw new DuplicateEmailIdException("Client already exists for Email Id : "+clientEntity.getEmailId());
+        if(clientRepository.existsByEmailId(client.getEmailId())){
+            throw new DuplicateEmailIdException("Client already exists for Email Id : "+ client.getEmailId());
         }
-        clientEntity.setCreatedDate(new Date());
-        clientEntity.setClientId(idGeneratorService.generateIdForClient());
-        return clientRepository.save(clientEntity);
+        client.setCreatedDate(new Date());
+        client.setClientId(idGeneratorService.generateIdForClient());
+        return clientRepository.save(client);
     }
 
     @Override
-    public Optional<ClientEntity> getClientForId(Long id) {
+    public Optional<Client> getClientForId(Long id) {
         return Optional.ofNullable(clientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Client not found for id : " + id)));
     }
 
 
     @Override
-    public List<ClientEntity> findAll(boolean isDeactivated) {
+    public List<Client> findAll(boolean isDeactivated) {
         Session session = entityManager.unwrap(Session.class);
         Filter filter = session.enableFilter("deactivatedClientFilter");
         filter.setParameter("isDeactivated", isDeactivated);
-        List<ClientEntity> clientEntities =  clientRepository.findAll();
+        List<Client> clientEntities =  clientRepository.findAll();
         session.disableFilter("deactivatedCenterFilter");
         return clientEntities;
     }
@@ -64,7 +63,7 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public ClientEntity updateContactNo(Long id, String contactNo){
+    public Client updateContactNo(Long id, String contactNo){
         if(clientRepository.existsByContactNo(contactNo)){
             throw new DuplicateContactNoException("Client already exists for contact no : "+contactNo);
         }
@@ -78,7 +77,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientEntity updateEmailId(Long id, String emailId){
+    public Client updateEmailId(Long id, String emailId){
         if(clientRepository.existsByContactNo(emailId)){
             throw new DuplicateEmailIdException("Client already exists for Email Id : "+emailId);
         }
@@ -93,22 +92,22 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public ClientEntity update(Long id, ClientEntity clientEntity) {
-        clientEntity.setId(id);
+    public Client update(Long id, Client client) {
+        client.setId(id);
 
         return clientRepository.findById(id).map(
                 existingClient -> {
-                    Optional.ofNullable(clientEntity.getFirstName()).ifPresent(existingClient::setFirstName);
-                    Optional.ofNullable(clientEntity.getLastName()).ifPresent(existingClient::setLastName);
-                    Optional.ofNullable(clientEntity.getAddress()).ifPresent(existingClient::setAddress);
-                    Optional.ofNullable(clientEntity.getCity()).ifPresent(existingClient::setCity);
-                    Optional.ofNullable(clientEntity.getFitnessGoal()).ifPresent(existingClient::setFitnessGoal);
-                    Optional.ofNullable(clientEntity.getWeight()).ifPresent(existingClient::setWeight);
-                    Optional.ofNullable(clientEntity.getHeight()).ifPresent(existingClient::setHeight);
-                    Optional.ofNullable(clientEntity.getPinCode()).ifPresent(existingClient::setPinCode);
-                    Optional.ofNullable(clientEntity.getState()).ifPresent(existingClient::setState);
-                    Optional.ofNullable(clientEntity.getDateOfBirth()).ifPresent(existingClient::setDateOfBirth);
-                    Optional.ofNullable(clientEntity.getTrainerEntity()).ifPresent(existingClient::setTrainerEntity);
+                    Optional.ofNullable(client.getFirstName()).ifPresent(existingClient::setFirstName);
+                    Optional.ofNullable(client.getLastName()).ifPresent(existingClient::setLastName);
+                    Optional.ofNullable(client.getAddress()).ifPresent(existingClient::setAddress);
+                    Optional.ofNullable(client.getCity()).ifPresent(existingClient::setCity);
+                    Optional.ofNullable(client.getFitnessGoal()).ifPresent(existingClient::setFitnessGoal);
+                    Optional.ofNullable(client.getWeight()).ifPresent(existingClient::setWeight);
+                    Optional.ofNullable(client.getHeight()).ifPresent(existingClient::setHeight);
+                    Optional.ofNullable(client.getPinCode()).ifPresent(existingClient::setPinCode);
+                    Optional.ofNullable(client.getState()).ifPresent(existingClient::setState);
+                    Optional.ofNullable(client.getDateOfBirth()).ifPresent(existingClient::setDateOfBirth);
+                    Optional.ofNullable(client.getTrainer()).ifPresent(existingClient::setTrainer);
                     return clientRepository.save(existingClient);
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Client not found for id : "+ id));

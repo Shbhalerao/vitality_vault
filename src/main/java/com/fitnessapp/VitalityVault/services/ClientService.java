@@ -1,23 +1,23 @@
 package com.fitnessapp.VitalityVault.services;
 
-import com.fitnessapp.VitalityVault.domain.entities.ClientEntity;
+import com.fitnessapp.VitalityVault.domain.entities.Client;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ClientService {
 
-    ClientEntity createClient(ClientEntity clientEntity);
+    Client createClient(Client client);
 
-    Optional<ClientEntity> getClientForId(Long id);
+    Optional<Client> getClientForId(Long id);
 
-    List<ClientEntity> findAll(boolean isDeactivated);
+    List<Client> findAll(boolean isDeactivated);
 
-    ClientEntity updateContactNo(Long id, String contactNo);
+    Client updateContactNo(Long id, String contactNo);
 
-    ClientEntity updateEmailId(Long id, String emailId);
+    Client updateEmailId(Long id, String emailId);
 
-    ClientEntity update(Long id, ClientEntity clientEntity);
+    Client update(Long id, Client client);
 
     void deactivateClient(Long id);
 

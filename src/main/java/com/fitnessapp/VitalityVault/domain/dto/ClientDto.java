@@ -49,5 +49,7 @@ public class ClientDto {
 
     private TrainerDto trainerDto;
 
+    private AddressDto addressDto;
+
 
 }

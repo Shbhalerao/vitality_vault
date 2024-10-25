@@ -1,7 +1,7 @@
 package com.fitnessapp.VitalityVault.controllers;
 
 import com.fitnessapp.VitalityVault.domain.dto.ClientDto;
-import com.fitnessapp.VitalityVault.domain.entities.ClientEntity;
+import com.fitnessapp.VitalityVault.domain.entities.Client;
 import com.fitnessapp.VitalityVault.mappers.Mapper;
 import com.fitnessapp.VitalityVault.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +17,24 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    private final Mapper<ClientEntity, ClientDto> clientMapper;
+    private final Mapper<Client, ClientDto> clientMapper;
 
     @Autowired
-    public ClientController(ClientService clientService, Mapper<ClientEntity, ClientDto> clientMapper) {
+    public ClientController(ClientService clientService, Mapper<Client, ClientDto> clientMapper) {
         this.clientService = clientService;
         this.clientMapper = clientMapper;
     }
 
     @PostMapping(path = "/clients")
     public ResponseEntity<ClientDto> create(@RequestBody ClientDto ClientDto){
-        ClientEntity clientEntity = clientMapper.mapFrom(ClientDto);
-        ClientEntity savedClientEntity = clientService.createClient(clientEntity);
-        return new ResponseEntity<>(clientMapper.mapTo(savedClientEntity), HttpStatus.CREATED);
+        Client client = clientMapper.mapFrom(ClientDto);
+        Client savedClient = clientService.createClient(client);
+        return new ResponseEntity<>(clientMapper.mapTo(savedClient), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/clients/{id}")
     public ResponseEntity<ClientDto> findOneById(@PathVariable("id") Long id){
-        Optional<ClientEntity> trainer = clientService.getClientForId(id);
+        Optional<Client> trainer = clientService.getClientForId(id);
         return trainer
                 .map(ClientEntity -> new ResponseEntity<>
                         (clientMapper.mapTo(ClientEntity),HttpStatus.OK))
@@ -43,7 +43,7 @@ public class ClientController {
 
     @GetMapping(path = "/clients")
     public ResponseEntity<List<ClientDto>> findAll(){
-        List<ClientEntity> clientEntities = clientService.findAll(false);
+        List<Client> clientEntities = clientService.findAll(false);
         List<ClientDto> clientDtoList = clientEntities.stream()
                 .map(clientMapper::mapTo)
                 .toList();
@@ -56,7 +56,7 @@ public class ClientController {
         if(clientService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        ClientEntity updatedEntity =
+        Client updatedEntity =
                 clientService.update(id,clientMapper.mapFrom(ClientDto));
 
         return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
@@ -72,7 +72,7 @@ public class ClientController {
 
     @GetMapping(path = "/clients/{status}")
     public ResponseEntity<List<ClientDto>> findAllDeactivatedClients(@PathVariable("status") boolean status){
-        List<ClientEntity> trainerEntities = clientService.findAll(status);
+        List<Client> trainerEntities = clientService.findAll(status);
         List<ClientDto> ClientDtoList = trainerEntities.stream()
                 .map(clientMapper::mapTo)
                 .toList();
@@ -85,7 +85,7 @@ public class ClientController {
         if(clientService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        ClientEntity updatedEntity =
+        Client updatedEntity =
                 clientService.updateContactNo(id,contactNo);
         return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
                 HttpStatus.OK);
@@ -97,7 +97,7 @@ public class ClientController {
         if(clientService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        ClientEntity updatedEntity =
+        Client updatedEntity =
                 clientService.updateEmailId(id,emailId);
         return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
                 HttpStatus.OK);

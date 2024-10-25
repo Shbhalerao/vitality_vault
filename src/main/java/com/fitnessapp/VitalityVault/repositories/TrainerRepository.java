@@ -1,10 +1,9 @@
 package com.fitnessapp.VitalityVault.repositories;
 
-import com.fitnessapp.VitalityVault.domain.entities.TrainerEntity;
-import com.fitnessapp.VitalityVault.services.TrainerService;
+import com.fitnessapp.VitalityVault.domain.entities.Trainer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TrainerRepository extends JpaRepository<TrainerEntity, Long> {
+public interface TrainerRepository extends JpaRepository<Trainer, Long> {
 
     boolean existsByContactNo(String contactNo);
 

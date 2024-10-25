@@ -23,16 +23,6 @@ public class TrainerDto {
 
     private List<Long> certifications;
 
-    private Long city;
-
-    private Long pinCode;
-
-    private Integer state;
-
-    private Long country;
-
-    private String address;
-
     private String contactNo;
 
     private String emailId;
@@ -42,6 +32,8 @@ public class TrainerDto {
     private Boolean deactivated =  Boolean.FALSE;
 
     private FitnessCenterDto fitnessCenterDto;
+
+    private AddressDto addressDto;
 
 
 }

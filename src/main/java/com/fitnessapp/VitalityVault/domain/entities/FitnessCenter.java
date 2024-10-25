@@ -19,7 +19,7 @@ import java.util.Date;
 @SQLDelete(sql = "UPDATE fitness_center_details SET deactivated = true WHERE id = ?")
 @FilterDef(name = "deactivatedCenterFilter", parameters = @ParamDef(name = "isDeactivated", type = Boolean.class))
 @Filter(name = "deactivatedCenterFilter", condition = "deactivated = :isDeactivated")
-public class FitnessCenterEntity {
+public class FitnessCenter {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fitness_center_sq")
     @Id
@@ -29,18 +29,6 @@ public class FitnessCenterEntity {
 
     private String centerName;
 
-    private String locality;
-
-    private String addressLine1;
-
-    private String addressLine2;
-
-    private Long city; //Picklist
-
-    private Long pinCode;
-
-    private Integer state; //PickList
-
     private String emailId;
 
     private String contactNo;
@@ -48,5 +36,8 @@ public class FitnessCenterEntity {
     private Date createdDate;
 
     private Boolean deactivated =  Boolean.FALSE;
+
+    // Identifiers for linking to the Address entity
+    private Long addressId; // Points to the Address table
 
 }

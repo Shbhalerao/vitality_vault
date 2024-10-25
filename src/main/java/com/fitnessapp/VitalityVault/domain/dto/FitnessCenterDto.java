@@ -16,31 +16,19 @@ import java.util.Date;
 public class FitnessCenterDto {
 
     @JsonProperty(required = false)
-    Long id;
+    private Long id;
 
-    String centerId;
+    private String centerId;
 
-    String centerName;
+    private String centerName;
 
-    String locality;
+    private String emailId;
 
-    String addressLine1;
+    private String contactNo;
 
-    String addressLine2;
+    private Date createdDate;
 
-    Long city; //Picklist
+    private Boolean deactivated;
 
-    Long pinCode;
-
-    Integer state; //PickList
-
-    String emailId;
-
-    String contactNo;
-
-    Date createdDate;
-
-    Boolean deactivated;
-
-
+    private AddressDto addressDto;
 }

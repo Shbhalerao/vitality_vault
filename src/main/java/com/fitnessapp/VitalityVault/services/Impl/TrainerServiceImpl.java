@@ -1,6 +1,6 @@
 package com.fitnessapp.VitalityVault.services.Impl;
 
-import com.fitnessapp.VitalityVault.domain.entities.TrainerEntity;
+import com.fitnessapp.VitalityVault.domain.entities.Trainer;
 import com.fitnessapp.VitalityVault.exceptions.DuplicateContactNoException;
 import com.fitnessapp.VitalityVault.exceptions.DuplicateEmailIdException;
 import com.fitnessapp.VitalityVault.exceptions.ResourceNotFoundException;
@@ -12,7 +12,6 @@ import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,29 +32,29 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerEntity createTrainer(TrainerEntity trainerEntity) {
-        if(trainerRepository.existsByContactNo(trainerEntity.getContactNo())){
-            throw new DuplicateContactNoException("Trainer already exists for contact no : "+trainerEntity.getContactNo());
+    public Trainer createTrainer(Trainer trainer) {
+        if(trainerRepository.existsByContactNo(trainer.getContactNo())){
+            throw new DuplicateContactNoException("Trainer already exists for contact no : "+ trainer.getContactNo());
         }
-        if(trainerRepository.existsByEmailId(trainerEntity.getEmailId())){
-            throw new DuplicateEmailIdException("Trainer already exists for Email Id : "+trainerEntity.getEmailId());
+        if(trainerRepository.existsByEmailId(trainer.getEmailId())){
+            throw new DuplicateEmailIdException("Trainer already exists for Email Id : "+ trainer.getEmailId());
         }
-            trainerEntity.setCreatedDate(new Date());
-            trainerEntity.setTrainerId(idGeneratorService.generateIdForTrainer());
-            return trainerRepository.save(trainerEntity);
+            trainer.setCreatedDate(new Date());
+            trainer.setTrainerId(idGeneratorService.generateIdForTrainer());
+            return trainerRepository.save(trainer);
     }
 
     @Override
-    public Optional<TrainerEntity> getTrainerForId(Long id) {
+    public Optional<Trainer> getTrainerForId(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<TrainerEntity> findAll(boolean isDeactivated) {
+    public List<Trainer> findAll(boolean isDeactivated) {
         Session session = entityManager.unwrap(Session.class);
         Filter filter = session.enableFilter("deactivatedTrainerFilter");
         filter.setParameter("isDeactivated", isDeactivated);
-        List<TrainerEntity> trainerEntities =  trainerRepository.findAll();
+        List<Trainer> trainerEntities =  trainerRepository.findAll();
         session.disableFilter("deactivatedCenterFilter");
         return trainerEntities;
     }
@@ -66,20 +65,20 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerEntity update(Long id, TrainerEntity trainerEntity) {
-        trainerEntity.setId(id);
+    public Trainer update(Long id, Trainer trainer) {
+        trainer.setId(id);
 
         return trainerRepository.findById(id).map(
                 existingTrainer -> {
-                    Optional.ofNullable(trainerEntity.getTrainerName()).ifPresent(existingTrainer::setTrainerName);
-                    Optional.ofNullable(trainerEntity.getCity()).ifPresent(existingTrainer::setCity);
-                    Optional.ofNullable(trainerEntity.getAddress()).ifPresent(existingTrainer::setAddress);
-                    Optional.ofNullable(trainerEntity.getWorkingSince()).ifPresent(existingTrainer::setWorkingSince);
-                    Optional.ofNullable(trainerEntity.getCertifications()).ifPresent(existingTrainer::setCertifications);
-                    Optional.ofNullable(trainerEntity.getPinCode()).ifPresent(existingTrainer::setPinCode);
-                    Optional.ofNullable(trainerEntity.getState()).ifPresent(existingTrainer::setState);
-                    Optional.ofNullable(trainerEntity.getCountry()).ifPresent(existingTrainer::setCountry);
-                    Optional.ofNullable(trainerEntity.getFitnessCenterEntity()).ifPresent(existingTrainer::setFitnessCenterEntity);
+                    Optional.ofNullable(trainer.getTrainerName()).ifPresent(existingTrainer::setTrainerName);
+                    Optional.ofNullable(trainer.getCity()).ifPresent(existingTrainer::setCity);
+                    Optional.ofNullable(trainer.getAddress()).ifPresent(existingTrainer::setAddress);
+                    Optional.ofNullable(trainer.getWorkingSince()).ifPresent(existingTrainer::setWorkingSince);
+                    Optional.ofNullable(trainer.getCertifications()).ifPresent(existingTrainer::setCertifications);
+                    Optional.ofNullable(trainer.getPinCode()).ifPresent(existingTrainer::setPinCode);
+                    Optional.ofNullable(trainer.getState()).ifPresent(existingTrainer::setState);
+                    Optional.ofNullable(trainer.getCountry()).ifPresent(existingTrainer::setCountry);
+                    Optional.ofNullable(trainer.getFitnessCenter()).ifPresent(existingTrainer::setFitnessCenter);
                     return trainerRepository.save(existingTrainer);
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Trainer not found for id : "+ id));
@@ -91,7 +90,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerEntity updateContactNo(Long id, String contactNo){
+    public Trainer updateContactNo(Long id, String contactNo){
         if(trainerRepository.existsByContactNo(contactNo)){
             throw new DuplicateContactNoException("Trainer already exists for contact no : "+contactNo);
         }
@@ -105,7 +104,7 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerEntity updateEmailId(Long id, String emailId){
+    public Trainer updateEmailId(Long id, String emailId){
         if(trainerRepository.existsByContactNo(emailId)){
             throw new DuplicateEmailIdException("Trainer already exists for Email Id : "+emailId);
         }

@@ -1,6 +1,5 @@
 package com.fitnessapp.VitalityVault.domain.entities;
 
-import com.fitnessapp.VitalityVault.domain.dto.TrainerDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +21,7 @@ import java.util.Date;
 @SQLDelete(sql = "UPDATE client_details SET deactivated = true WHERE id = ?")
 @FilterDef(name = "deactivateClientFilter", parameters = @ParamDef(name = "isDeactivated", type = Boolean.class))
 @Filter(name = "deactivateClientFilter", condition = "deactivated = :isDeactivated")
-public class ClientEntity {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_sq")
@@ -40,14 +39,6 @@ public class ClientEntity {
 
     private Double weight;
 
-    private String address;
-
-    private Long city;
-
-    private Integer state;
-
-    private Long pinCode;
-
     private String contactNo;
 
     private String emailId;
@@ -60,7 +51,10 @@ public class ClientEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "trainer_id")
-    private TrainerEntity trainerEntity;
+    private Trainer trainer;
+
+    // Identifiers for linking to the Address entity
+    private Long addressId; // Points to the Address table
 
 
 }

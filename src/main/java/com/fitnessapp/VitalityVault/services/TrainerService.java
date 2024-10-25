@@ -1,25 +1,25 @@
 package com.fitnessapp.VitalityVault.services;
 
-import com.fitnessapp.VitalityVault.domain.entities.TrainerEntity;
+import com.fitnessapp.VitalityVault.domain.entities.Trainer;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TrainerService {
 
-    TrainerEntity createTrainer(TrainerEntity trainerEntity);
+    Trainer createTrainer(Trainer trainer);
 
-    Optional<TrainerEntity> getTrainerForId(Long id);
+    Optional<Trainer> getTrainerForId(Long id);
 
-    List<TrainerEntity> findAll(boolean isDeactivated);
+    List<Trainer> findAll(boolean isDeactivated);
 
     boolean isExists(Long id);
 
-    TrainerEntity update(Long id,TrainerEntity trainerEntity);
+    Trainer update(Long id, Trainer trainer);
 
     void deactivateTrainer(Long id);
 
-    TrainerEntity updateContactNo(Long id, String contactNo);
+    Trainer updateContactNo(Long id, String contactNo);
 
-    TrainerEntity updateEmailId(Long id, String emailId);
+    Trainer updateEmailId(Long id, String emailId);
 }

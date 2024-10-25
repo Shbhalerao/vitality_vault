@@ -1,7 +1,7 @@
 package com.fitnessapp.VitalityVault.controllers;
 
 import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
-import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
+import com.fitnessapp.VitalityVault.domain.entities.FitnessCenter;
 import com.fitnessapp.VitalityVault.mappers.Mapper;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +18,25 @@ public class FitnessCenterController {
 
     private final FitnessCenterService fitnessCenterService;
 
-    private final Mapper<FitnessCenterEntity, FitnessCenterDto> fitnessCenterMapper;
+    private final Mapper<FitnessCenter, FitnessCenterDto> fitnessCenterMapper;
 
     @Autowired
     public FitnessCenterController(FitnessCenterService fitnessCenterService
-            ,Mapper<FitnessCenterEntity, FitnessCenterDto> fitnessCenterMapper){
+            ,Mapper<FitnessCenter, FitnessCenterDto> fitnessCenterMapper){
         this.fitnessCenterService = fitnessCenterService;
         this.fitnessCenterMapper = fitnessCenterMapper;
     }
 
     @PostMapping(path = "/fitness-centers")
     public ResponseEntity<FitnessCenterDto> createFitnessCenter(@RequestBody FitnessCenterDto fitnessCenterDto){
-        FitnessCenterEntity fitnessCenterEntity = fitnessCenterMapper.mapFrom(fitnessCenterDto);
-        FitnessCenterEntity savedFitnessCenterEntity = fitnessCenterService.createFitnessCenter(fitnessCenterEntity);
-        return new ResponseEntity<>(fitnessCenterMapper.mapTo(savedFitnessCenterEntity), HttpStatus.CREATED);
+        FitnessCenter fitnessCenter = fitnessCenterMapper.mapFrom(fitnessCenterDto);
+        FitnessCenter savedFitnessCenter = fitnessCenterService.createFitnessCenter(fitnessCenter);
+        return new ResponseEntity<>(fitnessCenterMapper.mapTo(savedFitnessCenter), HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/fitness-centers/{id}")
     public ResponseEntity<FitnessCenterDto> findOneById(@PathVariable("id") Long id){
-        Optional<FitnessCenterEntity> fitnessCenter = fitnessCenterService.getFitnessCenterForId(id);
+        Optional<FitnessCenter> fitnessCenter = fitnessCenterService.getFitnessCenterForId(id);
         return fitnessCenter
                 .map(fitnessCenterEntity -> new ResponseEntity<>
                         (fitnessCenterMapper.mapTo(fitnessCenterEntity),HttpStatus.OK))
@@ -45,8 +45,8 @@ public class FitnessCenterController {
 
     @GetMapping(path = "/fitness-centers")
     public ResponseEntity<List<FitnessCenterDto>> findAll(){
-        List<FitnessCenterEntity> fitnessCenterEntityList = fitnessCenterService.findAll(false);
-        List<FitnessCenterDto> fitnessCenterDtos = fitnessCenterEntityList.stream()
+        List<FitnessCenter> fitnessCenterList = fitnessCenterService.findAll(false);
+        List<FitnessCenterDto> fitnessCenterDtos = fitnessCenterList.stream()
                 .map(fitnessCenterMapper::mapTo)
                 .toList();
         return new ResponseEntity<>(fitnessCenterDtos, HttpStatus.OK);
@@ -58,7 +58,7 @@ public class FitnessCenterController {
             if(!fitnessCenterService.isExists(id)){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            FitnessCenterEntity updatedEntity =
+            FitnessCenter updatedEntity =
                     fitnessCenterService.update(id,fitnessCenterMapper.mapFrom(fitnessCenterDto));
 
             return new ResponseEntity<>(fitnessCenterMapper.mapTo(updatedEntity),
@@ -74,8 +74,8 @@ public class FitnessCenterController {
 
     @GetMapping(path = "/fitness-centers/deactivated-centers")
     public ResponseEntity<List<FitnessCenterDto>> findAllDeactivatedCenters(){
-        List<FitnessCenterEntity> fitnessCenterEntityList = fitnessCenterService.findAll(true);
-        List<FitnessCenterDto> fitnessCenterDtos = fitnessCenterEntityList.stream()
+        List<FitnessCenter> fitnessCenterList = fitnessCenterService.findAll(true);
+        List<FitnessCenterDto> fitnessCenterDtos = fitnessCenterList.stream()
                 .map(fitnessCenterMapper::mapTo)
                 .toList();
         return new ResponseEntity<>(fitnessCenterDtos, HttpStatus.OK);
@@ -87,7 +87,7 @@ public class FitnessCenterController {
         if(!fitnessCenterService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        FitnessCenterEntity updatedEntity =
+        FitnessCenter updatedEntity =
                 fitnessCenterService.updateContactNo(id,contactNo);
         return new ResponseEntity<>(fitnessCenterMapper.mapTo(updatedEntity),
                 HttpStatus.OK);
@@ -99,7 +99,7 @@ public class FitnessCenterController {
         if(!fitnessCenterService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        FitnessCenterEntity updatedEntity =
+        FitnessCenter updatedEntity =
                 fitnessCenterService.updateEmailId(id,emailId);
         return new ResponseEntity<>(fitnessCenterMapper.mapTo(updatedEntity),
                 HttpStatus.OK);

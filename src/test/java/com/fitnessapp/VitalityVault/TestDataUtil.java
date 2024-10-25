@@ -1,6 +1,6 @@
 package com.fitnessapp.VitalityVault;
 
-import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
+import com.fitnessapp.VitalityVault.domain.entities.FitnessCenter;
 
 import java.util.Date;
 
@@ -10,8 +10,8 @@ public final class TestDataUtil {
 
     }
 
-    public static FitnessCenterEntity createFitnessCenterEntity_One(){
-            return FitnessCenterEntity.builder()
+    public static FitnessCenter createFitnessCenterEntity_One(){
+            return FitnessCenter.builder()
                     .centerName("Golds Gym")
                     .addressLine1("First Floor")
                     .addressLine2("Teen Hath Naka")
@@ -26,8 +26,8 @@ public final class TestDataUtil {
                     .build();
     }
 
-    public static FitnessCenterEntity createFitnessCenterEntity_Two(){
-        return FitnessCenterEntity.builder()
+    public static FitnessCenter createFitnessCenterEntity_Two(){
+        return FitnessCenter.builder()
                 .centerName("Talwalkars Gym")
                 .addressLine1("Ground Floor")
                 .addressLine2("Panch Pakhadi")

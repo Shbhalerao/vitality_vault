@@ -1,10 +1,8 @@
 package com.fitnessapp.VitalityVault.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fitnessapp.VitalityVault.TestDataUtil;
-import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
-import com.fitnessapp.VitalityVault.domain.entities.FitnessCenterEntity;
+import com.fitnessapp.VitalityVault.domain.entities.FitnessCenter;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +30,7 @@ public class FitnessCenterControllerIntegrationTest {
 
     @Autowired
     public FitnessCenterControllerIntegrationTest(MockMvc mockMvc
-    ,FitnessCenterService fitnessCenterService, ObjectMapper objectMapper){
+    ,FitnessCenterService fitnessCenterService){
         this.fitnessCenterService = fitnessCenterService;
         this.mockMvc = mockMvc;
         this.objectMapper = new ObjectMapper();
@@ -40,14 +38,14 @@ public class FitnessCenterControllerIntegrationTest {
 
     @Test
     public void testFitnessCenterCreationReturns201Created() throws Exception{
-        FitnessCenterEntity fitnessCenterEntity = TestDataUtil
+        FitnessCenter fitnessCenter = TestDataUtil
                 .createFitnessCenterEntity_One();
 
-        fitnessCenterEntity.setId(null);
-        String json = objectMapper.writeValueAsString(fitnessCenterEntity);
+        fitnessCenter.setId(null);
+        String json = objectMapper.writeValueAsString(fitnessCenter);
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/fitness-centers")
+                MockMvcRequestBuilders.put("/fitness-centers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
         ).andExpect(MockMvcResultMatchers.status().isCreated());
@@ -56,7 +54,7 @@ public class FitnessCenterControllerIntegrationTest {
 
     @Test
     public void testFitnessCenterCreationReturnsSavedCenter() throws Exception {
-        FitnessCenterEntity testAuthorA = TestDataUtil.createFitnessCenterEntity_One();
+        FitnessCenter testAuthorA = TestDataUtil.createFitnessCenterEntity_One();
         testAuthorA.setId(null);
         String authorJson = objectMapper.writeValueAsString(testAuthorA);
 

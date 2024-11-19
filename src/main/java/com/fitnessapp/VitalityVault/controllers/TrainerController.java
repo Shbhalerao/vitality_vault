@@ -18,37 +18,30 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-    private final Mapper<Trainer, TrainerDto> trainerMapper;
-
     @Autowired
     public TrainerController(TrainerService trainerService, Mapper<Trainer, TrainerDto> trainerMapper) {
         this.trainerService = trainerService;
-        this.trainerMapper = trainerMapper;
     }
 
     @PostMapping(path = "/trainers")
     public ResponseEntity<TrainerDto> createTrainer(@RequestBody TrainerDto trainerDto){
-        Trainer trainer = trainerMapper.mapFrom(trainerDto);
-        Trainer savedTrainer = trainerService.createTrainer(trainer);
-        return new ResponseEntity<>(trainerMapper.mapTo(savedTrainer), HttpStatus.CREATED);
+        TrainerDto savedTrainer = trainerService.createTrainer(trainerDto);
+        return new ResponseEntity<>(savedTrainer, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/trainers/{id}")
     public ResponseEntity<TrainerDto> findOneById(@PathVariable("id") Long id){
-        Optional<Trainer> trainer = trainerService.getTrainerForId(id);
+        Optional<TrainerDto> trainer = trainerService.getTrainerForId(id);
         return trainer
-                .map(trainerEntity -> new ResponseEntity<>
-                        (trainerMapper.mapTo(trainerEntity),HttpStatus.OK))
+                .map(trainerDto -> new ResponseEntity<>
+                        (trainerDto,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping(path = "/trainers")
-    public ResponseEntity<List<TrainerDto>> findAll(){
-        List<Trainer> trainerEntities = trainerService.findAll(false);
-        List<TrainerDto> trainerList = trainerEntities.stream()
-                .map(trainerMapper::mapTo)
-                .toList();
-        return new ResponseEntity<>(trainerList, HttpStatus.OK);
+    @GetMapping(path = "/trainers/{filter}")
+    public ResponseEntity<List<TrainerDto>> findAll(@PathVariable("filter") Boolean filter){
+        List<TrainerDto> trainerDtoList = trainerService.findAll(filter);
+        return new ResponseEntity<>(trainerDtoList, HttpStatus.OK);
     }
 
     @PatchMapping(path = "/trainers/{id}")
@@ -57,10 +50,10 @@ public class TrainerController {
         if(!trainerService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Trainer updatedEntity =
-                trainerService.update(id,trainerMapper.mapFrom(trainerDto));
+        TrainerDto updated =
+                trainerService.update(id,trainerDto);
 
-        return new ResponseEntity<>(trainerMapper.mapTo(updatedEntity),
+        return new ResponseEntity<>(updated,
                 HttpStatus.OK);
 
     }
@@ -71,36 +64,27 @@ public class TrainerController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(path = "/trainers/deactivated-trainers")
-    public ResponseEntity<List<TrainerDto>> findAllDeactivatedCenters(){
-        List<Trainer> trainerEntities = trainerService.findAll(true);
-        List<TrainerDto> trainerDtoList = trainerEntities.stream()
-                .map(trainerMapper::mapTo)
-                .toList();
-        return new ResponseEntity<>(trainerDtoList, HttpStatus.OK);
-    }
 
-    @PatchMapping(path = "/trainers/update-contact/{id}/{contact_no}")
+    @PatchMapping(path = "/trainers/contact/{id}/{contact_no}")
     public ResponseEntity<TrainerDto> updateContact(@PathVariable("id") Long id,
                                                      @PathVariable("contact_no") String contactNo){
         if(!trainerService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Trainer updatedEntity =
+        TrainerDto updatedTrainer =
                 trainerService.updateContactNo(id,contactNo);
-        return new ResponseEntity<>(trainerMapper.mapTo(updatedEntity),
+        return new ResponseEntity<>(updatedTrainer,
                 HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/trainers/update-email/{id}/{email_id}")
+    @PatchMapping(path = "/trainers/email/{id}/{email_id}")
     public ResponseEntity<TrainerDto> updateEmail(@PathVariable("id") Long id,
                                                     @PathVariable("email_id") String emailId){
         if(!trainerService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Trainer updatedEntity =
-                trainerService.updateEmailId(id,emailId);
-        return new ResponseEntity<>(trainerMapper.mapTo(updatedEntity),
+        TrainerDto updatedTrainer = trainerService.updateEmailId(id,emailId);
+        return new ResponseEntity<>(updatedTrainer,
                 HttpStatus.OK);
     }
 

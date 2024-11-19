@@ -1,10 +1,14 @@
 package com.fitnessapp.VitalityVault.services.Impl;
 
+import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
+import com.fitnessapp.VitalityVault.domain.entities.Address;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenter;
 import com.fitnessapp.VitalityVault.exceptions.DuplicateContactNoException;
 import com.fitnessapp.VitalityVault.exceptions.DuplicateEmailIdException;
 import com.fitnessapp.VitalityVault.exceptions.ResourceNotFoundException;
+import com.fitnessapp.VitalityVault.mappers.Mapper;
 import com.fitnessapp.VitalityVault.repositories.FitnessCenterRepository;
+import com.fitnessapp.VitalityVault.services.AddressService;
 import com.fitnessapp.VitalityVault.services.FitnessCenterService;
 import com.fitnessapp.VitalityVault.services.IdGeneratorService;
 import jakarta.persistence.EntityManager;
@@ -27,42 +31,57 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
 
     private final IdGeneratorService idGeneratorService;
 
+    private final AddressService addressService;
+
+    private final Mapper<FitnessCenter, FitnessCenterDto> fitnessCenterMapper;
+
     @Autowired
     public FitnessCenterServiceImpl(FitnessCenterRepository fitnessCenterRepository, EntityManager entityManager
-                    ,IdGeneratorService idGeneratorService){
+                    , IdGeneratorService idGeneratorService, AddressService addressService, Mapper<FitnessCenter, FitnessCenterDto> fitnessCenterMapper){
         this.fitnessCenterRepository = fitnessCenterRepository;
         this.entityManager = entityManager;
         this.idGeneratorService = idGeneratorService;
+        this.addressService = addressService;
+        this.fitnessCenterMapper = fitnessCenterMapper;
     }
 
     @Override
-    public FitnessCenter createFitnessCenter(FitnessCenter fitnessCenter) {
+    public FitnessCenterDto createFitnessCenter(FitnessCenterDto fitnessCenterDto) {
+        FitnessCenter fitnessCenter = fitnessCenterMapper.mapFrom(fitnessCenterDto);
         if(fitnessCenterRepository.existsByContactNo(fitnessCenter.getContactNo())){
             throw new DuplicateContactNoException("A Fitness Center already exists with contact no : "+ fitnessCenter.getContactNo());
         }
         if(fitnessCenterRepository.existsByContactNo(fitnessCenter.getEmailId())){
             throw new DuplicateEmailIdException("A Fitness Center already exists with email id : "+ fitnessCenter.getEmailId());
         }
+        Address savedAddress = addressService.save(fitnessCenterDto.getAddressDto());
+        fitnessCenter.setAddressId(savedAddress.getAddressId());
         fitnessCenter.setCreatedDate(new Date());
         fitnessCenter.setCenterId(idGeneratorService.generateIdForFitnessCenter());
-        return fitnessCenterRepository.save(fitnessCenter);
+        return fitnessCenterMapper.mapTo(fitnessCenterRepository.save(fitnessCenter));
     }
 
     @Override
-    public Optional<FitnessCenter> getFitnessCenterForId(Long id) {
-      return Optional.ofNullable(fitnessCenterRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : " + id)));
+    public Optional<FitnessCenterDto> getFitnessCenterForId(Long id) {
+      FitnessCenter fitnessCenter = fitnessCenterRepository
+              .findById(id)
+              .orElseThrow(() ->
+                      new ResourceNotFoundException("Fitness Center not found for id : " + id));
+      return Optional.ofNullable(fitnessCenterMapper.mapTo(fitnessCenter));
 
     }
 
 
     @Override
-    public List<FitnessCenter> findAll(boolean isDeactivated) {
+    public List<FitnessCenterDto> findAll(boolean isDeactivated) {
         Session session = entityManager.unwrap(Session.class);
         Filter filter = session.enableFilter("deactivatedCenterFilter");
         filter.setParameter("isDeactivated", isDeactivated);
         List<FitnessCenter> fitnessCenterEntities =  fitnessCenterRepository.findAll();
         session.disableFilter("deactivatedCenterFilter");
-        return fitnessCenterEntities;
+        return fitnessCenterEntities.stream()
+                .map(fitnessCenterMapper::mapTo)
+                .toList();
     }
 
     @Override
@@ -71,21 +90,16 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
     }
 
     @Override
-    public FitnessCenter update(Long id, FitnessCenter fitnessCenter) {
+    public FitnessCenterDto update(Long id, FitnessCenterDto fitnessCenterDto) {
+        FitnessCenter fitnessCenter = fitnessCenterMapper.mapFrom(fitnessCenterDto);
         fitnessCenter.setId(id);
-
-        return fitnessCenterRepository.findById(id).map(
+        FitnessCenter updatedCenter = fitnessCenterRepository.findById(id).map(
                 existingFitnessCenter -> {
                     Optional.ofNullable(fitnessCenter.getCenterName()).ifPresent(existingFitnessCenter::setCenterName);
-                    Optional.ofNullable(fitnessCenter.getCity()).ifPresent(existingFitnessCenter::setCity);
-                    Optional.ofNullable(fitnessCenter.getAddressLine1()).ifPresent(existingFitnessCenter::setAddressLine1);
-                    Optional.ofNullable(fitnessCenter.getAddressLine2()).ifPresent(existingFitnessCenter::setAddressLine2);
-                    Optional.ofNullable(fitnessCenter.getLocality()).ifPresent(existingFitnessCenter::setLocality);
-                    Optional.ofNullable(fitnessCenter.getPinCode()).ifPresent(existingFitnessCenter::setPinCode);
-                    Optional.ofNullable(fitnessCenter.getState()).ifPresent(existingFitnessCenter::setState);
                     return fitnessCenterRepository.save(existingFitnessCenter);
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
+        return fitnessCenterMapper.mapTo(updatedCenter);
     }
 
     @Override
@@ -96,31 +110,33 @@ public class FitnessCenterServiceImpl implements FitnessCenterService {
     }
 
     @Override
-    public FitnessCenter updateContactNo(Long id, String contactNo){
+    public FitnessCenterDto updateContactNo(Long id, String contactNo){
         if(fitnessCenterRepository.existsByContactNo(contactNo)){
             throw new DuplicateContactNoException("Fitness Center already exists for contact no : "+contactNo);
         }
 
-        return fitnessCenterRepository.findById(id).map(
+        FitnessCenter fitnessCenter = fitnessCenterRepository.findById(id).map(
                 existingFitnessCenter -> {
                     Optional.ofNullable(contactNo).ifPresent(existingFitnessCenter::setContactNo);
                     return fitnessCenterRepository.save(existingFitnessCenter);
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
+        return fitnessCenterMapper.mapTo(fitnessCenter);
     }
 
     @Override
-    public FitnessCenter updateEmailId(Long id, String emailId){
+    public FitnessCenterDto updateEmailId(Long id, String emailId){
         if(fitnessCenterRepository.existsByContactNo(emailId)){
             throw new DuplicateEmailIdException("Fitness Center already exists for Email Id : "+emailId);
         }
 
-        return fitnessCenterRepository.findById(id).map(
+        FitnessCenter fitnessCenter = fitnessCenterRepository.findById(id).map(
                 existingFitnessCenter -> {
                     Optional.ofNullable(emailId).ifPresent(existingFitnessCenter::setEmailId);
                     return fitnessCenterRepository.save(existingFitnessCenter);
                 }
         ).orElseThrow(() -> new ResourceNotFoundException("Fitness Center not found for id : "+ id));
+        return fitnessCenterMapper.mapTo(fitnessCenter);
     }
 
    

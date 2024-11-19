@@ -29,14 +29,6 @@ public class ClientDto {
 
     private Double weight;
 
-    private String address;
-
-    private Long city;
-
-    private Integer state;
-
-    private Long pinCode;
-
     private String contactNo;
 
     private String emailId;

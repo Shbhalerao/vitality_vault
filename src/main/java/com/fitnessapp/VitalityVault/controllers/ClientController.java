@@ -17,36 +17,29 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    private final Mapper<Client, ClientDto> clientMapper;
-
     @Autowired
     public ClientController(ClientService clientService, Mapper<Client, ClientDto> clientMapper) {
         this.clientService = clientService;
-        this.clientMapper = clientMapper;
     }
 
     @PostMapping(path = "/clients")
-    public ResponseEntity<ClientDto> create(@RequestBody ClientDto ClientDto){
-        Client client = clientMapper.mapFrom(ClientDto);
-        Client savedClient = clientService.createClient(client);
-        return new ResponseEntity<>(clientMapper.mapTo(savedClient), HttpStatus.CREATED);
+    public ResponseEntity<ClientDto> create(@RequestBody ClientDto clientDto){
+        ClientDto savedClient = clientService.createClient(clientDto);
+        return new ResponseEntity<>(savedClient, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/clients/{id}")
     public ResponseEntity<ClientDto> findOneById(@PathVariable("id") Long id){
-        Optional<Client> trainer = clientService.getClientForId(id);
-        return trainer
-                .map(ClientEntity -> new ResponseEntity<>
-                        (clientMapper.mapTo(ClientEntity),HttpStatus.OK))
+        Optional<ClientDto> client = clientService.getClientForId(id);
+        return client
+                .map(clientDto -> new ResponseEntity<>
+                        (clientDto,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping(path = "/clients")
-    public ResponseEntity<List<ClientDto>> findAll(){
-        List<Client> clientEntities = clientService.findAll(false);
-        List<ClientDto> clientDtoList = clientEntities.stream()
-                .map(clientMapper::mapTo)
-                .toList();
+    @GetMapping(path = "/clients/{filter}")
+    public ResponseEntity<List<ClientDto>> findAll(@PathVariable("filter")Boolean filter){
+        List<ClientDto> clientDtoList = clientService.findAll(filter);
         return new ResponseEntity<>(clientDtoList, HttpStatus.OK);
     }
 
@@ -56,11 +49,9 @@ public class ClientController {
         if(clientService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Client updatedEntity =
-                clientService.update(id,clientMapper.mapFrom(ClientDto));
-
-        return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
-                HttpStatus.OK);
+        ClientDto updatedClient =
+                clientService.update(id,ClientDto);
+        return new ResponseEntity<>(updatedClient, HttpStatus.OK);
 
     }
 
@@ -70,24 +61,15 @@ public class ClientController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(path = "/clients/{status}")
-    public ResponseEntity<List<ClientDto>> findAllDeactivatedClients(@PathVariable("status") boolean status){
-        List<Client> trainerEntities = clientService.findAll(status);
-        List<ClientDto> ClientDtoList = trainerEntities.stream()
-                .map(clientMapper::mapTo)
-                .toList();
-        return new ResponseEntity<>(ClientDtoList, HttpStatus.OK);
-    }
-
     @PatchMapping(path = "/clients/contact/{id}/{contact_no}")
     public ResponseEntity<ClientDto> updateContact(@PathVariable("id") Long id,
                                                     @PathVariable("contact_no") String contactNo){
         if(clientService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Client updatedEntity =
+        ClientDto clientDto =
                 clientService.updateContactNo(id,contactNo);
-        return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
+        return new ResponseEntity<>(clientDto,
                 HttpStatus.OK);
     }
 
@@ -97,9 +79,9 @@ public class ClientController {
         if(clientService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Client updatedEntity =
+        ClientDto clientDto =
                 clientService.updateEmailId(id,emailId);
-        return new ResponseEntity<>(clientMapper.mapTo(updatedEntity),
+        return new ResponseEntity<>(clientDto,
                 HttpStatus.OK);
     }
 

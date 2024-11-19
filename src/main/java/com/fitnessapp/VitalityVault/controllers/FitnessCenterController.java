@@ -18,38 +18,31 @@ public class FitnessCenterController {
 
     private final FitnessCenterService fitnessCenterService;
 
-    private final Mapper<FitnessCenter, FitnessCenterDto> fitnessCenterMapper;
-
     @Autowired
     public FitnessCenterController(FitnessCenterService fitnessCenterService
             ,Mapper<FitnessCenter, FitnessCenterDto> fitnessCenterMapper){
         this.fitnessCenterService = fitnessCenterService;
-        this.fitnessCenterMapper = fitnessCenterMapper;
     }
 
     @PostMapping(path = "/fitness-centers")
     public ResponseEntity<FitnessCenterDto> createFitnessCenter(@RequestBody FitnessCenterDto fitnessCenterDto){
-        FitnessCenter fitnessCenter = fitnessCenterMapper.mapFrom(fitnessCenterDto);
-        FitnessCenter savedFitnessCenter = fitnessCenterService.createFitnessCenter(fitnessCenter);
-        return new ResponseEntity<>(fitnessCenterMapper.mapTo(savedFitnessCenter), HttpStatus.CREATED);
+        FitnessCenterDto savedFitnessCenter = fitnessCenterService.createFitnessCenter(fitnessCenterDto);
+        return new ResponseEntity<>(savedFitnessCenter, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "/fitness-centers/{id}")
     public ResponseEntity<FitnessCenterDto> findOneById(@PathVariable("id") Long id){
-        Optional<FitnessCenter> fitnessCenter = fitnessCenterService.getFitnessCenterForId(id);
+        Optional<FitnessCenterDto> fitnessCenter = fitnessCenterService.getFitnessCenterForId(id);
         return fitnessCenter
-                .map(fitnessCenterEntity -> new ResponseEntity<>
-                        (fitnessCenterMapper.mapTo(fitnessCenterEntity),HttpStatus.OK))
+                .map(fitnessCenterDto -> new ResponseEntity<>
+                        (fitnessCenterDto,HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping(path = "/fitness-centers")
-    public ResponseEntity<List<FitnessCenterDto>> findAll(){
-        List<FitnessCenter> fitnessCenterList = fitnessCenterService.findAll(false);
-        List<FitnessCenterDto> fitnessCenterDtos = fitnessCenterList.stream()
-                .map(fitnessCenterMapper::mapTo)
-                .toList();
-        return new ResponseEntity<>(fitnessCenterDtos, HttpStatus.OK);
+    @GetMapping(path = "/fitness-centers/{filter}")
+    public ResponseEntity<List<FitnessCenterDto>> findAll(@PathVariable("filter") Boolean filter){
+        List<FitnessCenterDto> fitnessCenterList = fitnessCenterService.findAll(filter);
+        return new ResponseEntity<>(fitnessCenterList, HttpStatus.OK);
     }
 
     @PatchMapping(path = "/fitness-centers/{id}")
@@ -58,10 +51,9 @@ public class FitnessCenterController {
             if(!fitnessCenterService.isExists(id)){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            FitnessCenter updatedEntity =
-                    fitnessCenterService.update(id,fitnessCenterMapper.mapFrom(fitnessCenterDto));
-
-            return new ResponseEntity<>(fitnessCenterMapper.mapTo(updatedEntity),
+            FitnessCenterDto updatedCenter =
+                    fitnessCenterService.update(id,fitnessCenterDto);
+            return new ResponseEntity<>(updatedCenter,
                     HttpStatus.OK);
 
     }
@@ -72,36 +64,28 @@ public class FitnessCenterController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(path = "/fitness-centers/deactivated-centers")
-    public ResponseEntity<List<FitnessCenterDto>> findAllDeactivatedCenters(){
-        List<FitnessCenter> fitnessCenterList = fitnessCenterService.findAll(true);
-        List<FitnessCenterDto> fitnessCenterDtos = fitnessCenterList.stream()
-                .map(fitnessCenterMapper::mapTo)
-                .toList();
-        return new ResponseEntity<>(fitnessCenterDtos, HttpStatus.OK);
-    }
 
-    @PatchMapping(path = "/fitness-centers/update-contact/{id}/{contact_no}")
+    @PatchMapping(path = "/fitness-centers/contact/{id}/{contact_no}")
     public ResponseEntity<FitnessCenterDto> updateContact(@PathVariable("id") Long id,
                                                     @PathVariable("contact_no") String contactNo){
         if(!fitnessCenterService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        FitnessCenter updatedEntity =
+        FitnessCenterDto updatedCenter =
                 fitnessCenterService.updateContactNo(id,contactNo);
-        return new ResponseEntity<>(fitnessCenterMapper.mapTo(updatedEntity),
+        return new ResponseEntity<>(updatedCenter,
                 HttpStatus.OK);
     }
 
-    @PatchMapping(path = "/fitness-centers/update-email/{id}/{email_id}")
+    @PatchMapping(path = "/fitness-centers/email/{id}/{email_id}")
     public ResponseEntity<FitnessCenterDto> updateEmail(@PathVariable("id") Long id,
                                                   @PathVariable("email_id") String emailId){
         if(!fitnessCenterService.isExists(id)){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        FitnessCenter updatedEntity =
-                fitnessCenterService.updateEmailId(id,emailId);
-        return new ResponseEntity<>(fitnessCenterMapper.mapTo(updatedEntity),
+        FitnessCenterDto updatedCenter =
+                fitnessCenterService.updateContactNo(id,emailId);
+        return new ResponseEntity<>(updatedCenter,
                 HttpStatus.OK);
     }
 

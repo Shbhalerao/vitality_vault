@@ -1,5 +1,6 @@
 package com.fitnessapp.VitalityVault.services;
 
+import com.fitnessapp.VitalityVault.domain.dto.FitnessCenterDto;
 import com.fitnessapp.VitalityVault.domain.entities.FitnessCenter;
 
 import java.util.List;
@@ -7,19 +8,19 @@ import java.util.Optional;
 
 public interface FitnessCenterService {
 
-    FitnessCenter createFitnessCenter(FitnessCenter fitnessCenter);
+    FitnessCenterDto createFitnessCenter(FitnessCenterDto fitnessCenter);
 
-    Optional<FitnessCenter> getFitnessCenterForId(Long id);
+    Optional<FitnessCenterDto> getFitnessCenterForId(Long id);
 
-    List<FitnessCenter> findAll(boolean isDeactivated);
+    List<FitnessCenterDto> findAll(boolean isDeactivated);
 
     boolean isExists(Long id);
 
-    FitnessCenter update(Long id, FitnessCenter fitnessCenter);
+    FitnessCenterDto update(Long id, FitnessCenterDto fitnessCenterDto);
 
     void deactivateFitnessCenter(Long id);
 
-    FitnessCenter updateContactNo(Long id, String contactNo);
+    FitnessCenterDto updateContactNo(Long id, String contactNo);
 
-    FitnessCenter updateEmailId(Long id, String emailId);
+    FitnessCenterDto updateEmailId(Long id, String emailId);
 }
